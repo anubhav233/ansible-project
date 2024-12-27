@@ -52,4 +52,4 @@
 ## green.example.com
 ## blue.example.comi
 [sandbox]
-10.0.2.14 ansible_ssh_user=arvind
+35.164.51.13 ansible_ssh_user=ubuntu
