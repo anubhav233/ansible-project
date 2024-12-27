@@ -3,23 +3,57 @@ name: Ansible CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main  # Change this to any branch you want
 
 jobs:
   run-ansible-playbook:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # The operating system to run the job on
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Checkout the code from the repository
 
-      - name: Set up SSH key
+      - name: Set up SSH key directly
         run: |
           echo "Setting up SSH key..."
           mkdir -p ~/.ssh
-          echo "SSH private key:"  # Debugging: Ensure the private key is correctly injected
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | head -n 5  # Only print first 5 lines (never print the full private key)
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Set the private key from secrets
+          echo "-----BEGIN OPENSSH PRIVATE KEY-----
+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
+oDMLm4bow/bRQl-----END OPENSSH PRIVATE KEY-----" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa  # Make the private key readable only by the user
           echo "Private key setup complete"
           
@@ -30,7 +64,6 @@ jobs:
           
       - name: Run Ansible Playbook
         env:
-          ANSIBLE_HOST_KEY_CHECKING: 'False'
+          ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable host key
         run: |
-          ansible-playbook -i inventory/hosts install_package.yml  # Run the playbook
-
+          ansible-playbook -i inventory/hosts install_package.yml
