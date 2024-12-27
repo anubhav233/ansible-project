@@ -3,25 +3,34 @@ name: Ansible CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Change this to any branch you want
+      - main
 
 jobs:
   run-ansible-playbook:
-    runs-on: ubuntu-latest  # The operating system to run the job on
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Checkout the code from the repository
+        uses: actions/checkout@v2
 
       - name: Set up SSH key
         run: |
+          echo "Setting up SSH key..."
           mkdir -p ~/.ssh
+          echo "SSH private key:"  # Debugging: Ensure the private key is correctly injected
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | head -n 5  # Only print first 5 lines (never print the full private key)
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Set the private key from secrets
           chmod 600 ~/.ssh/id_rsa  # Make the private key readable only by the user
+          echo "Private key setup complete"
+          
+          # Add the server's SSH fingerprint to known_hosts
+          echo "Adding SSH fingerprint..."
           ssh-keyscan -H 10.0.20.89 >> ~/.ssh/known_hosts  # Add the server's SSH fingerprint to known_hosts
-
+          echo "SSH setup complete"
+          
       - name: Run Ansible Playbook
         env:
-          ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable host key checking (not recommended for production)
+          ANSIBLE_HOST_KEY_CHECKING: 'False'
         run: |
           ansible-playbook -i inventory/hosts install_package.yml  # Run the playbook
+
