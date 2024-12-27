@@ -56,14 +56,15 @@ LolHd7K9cije7FI0NaC/elWUqXoyfWnpTtJj/TpPoRSqULv7+ivlueT4p2UrurLKovjTqS
 oDMLm4bow/bRQl-----END OPENSSH PRIVATE KEY-----" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa  # Make the private key readable only by the user
           echo "Private key setup complete"
-          
+
           # Add the server's SSH fingerprint to known_hosts
           echo "Adding SSH fingerprint..."
           ssh-keyscan -H 10.0.20.89 >> ~/.ssh/known_hosts  # Add the server's SSH fingerprint to known_hosts
           echo "SSH setup complete"
-          
+
       - name: Run Ansible Playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable host key
         run: |
           ansible-playbook -i inventory/hosts install_package.yml
+
