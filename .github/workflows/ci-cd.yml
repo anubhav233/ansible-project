@@ -1,0 +1,12 @@
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Set the private key from secrets
+          chmod 600 ~/.ssh/id_rsa  # Make the private key readable only by the user
+          ssh-keyscan -H 10.0.20.89 >> ~/.ssh/known_hosts  # Add the server's SSH fingerprint to known_hosts
+
+      - name: Run Ansible Playbook
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable host key checking (not recommended for production)
+        run: |
+          ansible-playbook -i inventory/hosts install_package.yml  # Run the playbook

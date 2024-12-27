@@ -1,0 +1,11 @@
+---
+- name: Install package on remote machine
+  hosts: sandbox
+  become: yes  # Use sudo
+  tasks:
+    - name: Install htop package
+      apt:
+        name: htop
+        state: present
+          #        update_cache: yes
+
